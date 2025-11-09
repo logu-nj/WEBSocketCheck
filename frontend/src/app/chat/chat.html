@@ -1,0 +1,56 @@
+<div class="chat-container border rounded p-3 mx-auto" style="width: 600px">
+  <!-- Tabs for user list -->
+   <h3>{{userName}}</h3>
+  <div class="tabs d-flex gap-2 mb-3">
+    @for (name of tabNames; track i; let i = $index){
+      <button
+        (click)="selectTab(name)"
+        class="btn"
+        [ngClass]="tabName === name ? 'btn-primary' : 'btn-outline-primary'"
+      >
+        {{ name }}  
+      </button>
+    }
+    <button class="btn btn-secondary ms-auto" (click)="getTabNames()">Refresh</button>
+  </div>
+
+  <!-- Message area -->
+  <div class="msg-box border rounded p-2 mb-3" style="height: 300px; overflow-y: auto;">
+    <div *ngIf="!tabName" class="text-center text-muted">
+      Select a user to start chatting.
+    </div>
+
+    <div *ngFor="let msg of tabMessages">
+      <div
+        [ngClass]="{
+          'text-end': msg.fromUser === userName,
+          'text-start': msg.fromUser !== userName
+        }"
+      >
+        <div
+          class="d-inline-block p-2 my-1 rounded"
+          [ngClass]=" 
+            msg.fromUser === userName
+              ? 'bg-primary text-white'
+              : 'bg-light text-dark'
+          "
+        >
+          {{ msg.message }}
+          <br />
+          <small class="text-muted">{{ msg.time | date: 'shortTime' }}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input area -->
+  <div class="d-flex gap-2">
+    <input
+      [(ngModel)]="message"
+      class="form-control"
+      placeholder="Type a message..."
+      (keyup.enter)="send()"
+    />
+    <button class="btn btn-success" (click)="send()">Send</button>
+  </div>
+</div>
